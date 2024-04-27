@@ -13,7 +13,7 @@ def calc_sha256_salted(data):
 
 
 app = Flask(__name__)
-app.secret_key = 'essaywebsite2024mikaeel'
+app.secret_key = 'gradaholic2024mikaeel'
 
 @app.route('/',methods=['GET','POST'])
 def index():
