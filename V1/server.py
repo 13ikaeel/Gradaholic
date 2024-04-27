@@ -3,6 +3,7 @@ from sqlite3 import *
 from hashlib import *
 import random
 import yagmail
+from datetime import *
 
 
 def calc_sha256_salted(data):
@@ -14,15 +15,18 @@ def calc_sha256_salted(data):
 
 app = Flask(__name__)
 app.secret_key = 'gradaholic2024mikaeel'
-
+##########################################################################################
 @app.route('/',methods=['GET','POST'])
 def index():
 	return render_template('index.html')
 
 
-@app.route('/register-pesonal-details',methods=['POST'])
+#############################################################################################
+@app.route('/register-pesonal-details',methods=['POST','GET'])
 def register_personal_details():
 	email = request.form.get('email')
+	# session['email'] = email
+	print('email:',email)
  	
 	db = connect('db.db')
 	c = db.cursor()
@@ -34,14 +38,86 @@ def register_personal_details():
 	db.close()
 	if duplicate:
 		flash('Email has already been used. Login instead')
-		redirect(url_for('index'))
+		return redirect(url_for('index'))
 	else:
 		return render_template('register-personal-details.html',email=email)
 	
 
-@app.route('/login',methods=["GET","POST"])
-def login():
-	return render_template('login.html')
+
+#########################################################################################
+	
+@app.route('/signin',methods=["POST","GET"])
+def signin():
+	return render_template('signin.html')
+
+
+
+############################################################################################
+@app.route('/profile',methods=["POST"])
+def profile():
+	prevpage = request.form.get('currpage')
+	print('prevpage:',prevpage)
+
+	if prevpage == 'login':
+		username = request.form.get("username")
+		pw = request.form.get("pw")
+		hashpw = calc_sha256_salted(pw)
+		print((username,pw,hashpw))
+		db = connect('db.db')
+		c = db.cursor()
+		c.execute('''
+			SELECT * FROM Users
+			WHERE username = ? AND hashedpw=?
+		''',(username,hashpw))
+		valid = c.fetchone()
+		print('valid:',valid)
+		db.close()
+		if valid!=None:
+			return render_template("profile.html",username=username)
+		else:
+			flash('Invalid Username/Password')
+			return redirect(url_for('signin'))
+		
+		
+	# elif prevpage == 'register-personal-details':
+	username = request.form.get('username')
+	name = request.form.get('name')
+	pw = request.form.get('pw')
+	rpw = request.form.get('rpw')
+	hashpw = calc_sha256_salted(pw)
+	# email = session.get('email')
+	email = request.form.get('email')
+	date_time=str(datetime.now())
+
+	print((username,name,pw,email,date_time,0))
+	if pw!=rpw:
+		flash('Passwords do not match')
+		return redirect(url_for('register_personal_details'))
+	
+	db = connect('db.db')
+	c = db.cursor()
+	c.execute('''
+		SELECT * FROM USERS WHERE username=?
+	''',(username,))
+	duplicate = c.fetchone()
+	print("duplicate: ",duplicate)
+	if duplicate!=None:
+		flash('Username taken')
+		db.close()
+		return redirect(url_for('register_personal_details'))
+	
+	print('hi')
+	c.execute('''
+		INSERT INTO Users (username,name,hashedpw,email,registration_date,admin) 
+		VALUES(?,?,?,?,?,?)
+	''', (username,name,hashpw,email,date_time,0))
+	db.commit()
+	db.close()
+	return render_template('profile.html',username=username)
+
+
+
+
 
 
 @app.route('/about-us', methods=["GET","POST"])
@@ -60,55 +136,7 @@ def contact_success():
 	return
 
 
-@app.route('/profile',methods=["GET","POST"])
-def profile():
-	prevpage = request.form.get('currpage')
 
-	if prevpage == 'login':
-		username = request.form.get("username")
-		pw = request.form.get("pw")
-		hashpw = calc_sha256_salted('pw')
-		db = db.connect('db.db')
-		c = db.cursor()
-		c.execute('''
-			SELECT * FROM Users
-			WHERE username = ? AND hashedpw=?
-		'''(username,hashpw))
-		valid = c.fetchone()
-		db.close()
-		if valid:
-			return render_template("profile.html")
-		else:
-			flash('Invalid Username/Password')
-			return redirect(url_for('login'))
-		
-	# elif prevpage == 'register-personal-details':
-	else:
-		pw = request.form.get('pw')
-		cfm_pw = request.form.get('cfm_pw')
-		if pw!=cfm_pw:
-			flash('Passwords do not match')
-			return redirect(url_for('register_personal_details'))
-		username = request.form.get('username')
-		hashpw = calc_sha256_salted(pw)
-		email = request.form.get('email')
-		print([username,hashpw,email,0,0])
-		db = connect('db.db')
-		c = db.cursor()
-		c.execute('''
-			SELECT * FROM USERS WHERE username=?
-		''',(username,))
-		duplicate = c.fetchone()
-		if duplicate:
-			flash('Username taken')
-			db.close()
-			return redirect(url_for('register_personal_details'))
-		c.execute('''
-			INSERT INTO Users (username,hashedpw,email,rp,admin) 
-			VALUES(?,?,?,?,?)
-		''', (username,hashpw,email,0,0))
-		db.close()
-		return render_template('profile.html',username=username, RP=0)
 	
 
 
@@ -116,4 +144,4 @@ def profile():
 
 
 if __name__ == '__main__':
-	app.run(debug=False,port=5055)
+	app.run(debug=True,port=5055)

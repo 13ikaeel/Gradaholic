@@ -4,40 +4,59 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Gradaholic</title>
-	<link rel="stylesheet" src="../static/styles.css">
+	<link rel="stylesheet" href="../static/styles3.css">
 </head>
 
-
-
-
 <body>
-	<ul class="nav">
-		<li class="nav-item">
-			<a class="nav-link "  href="#">Explore</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Questions</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Contests</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Leaderboard</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">log out</a>
-		</li>
-
-	</ul>
+	<div class="hero">
+		<nav>
+			<img src="../static/images/logo.png" alt="logo" class="logo">
+			<ul>
+				<li><a href="#">Profile</a></li>
+				<li><a href="#">Leaderboard</a>L</li>
+				<li><a href="#">Notifications</a></li>
+				<li><a href="#">Help</a></li>
+			</ul>
+			<img src="../static/images/profilepic.png" alt="profile pic" class="user-pic" onclick="toggleMenu()">
 
 
-	<div class="container">
-	<h1>{{username}}</h1>
-	<img src="#">
-	<a href=""><p>Friends</p></a>
-	<p>Reputation Points: {{RP}}</p>
-	
+			<div class="sub-menu-wrap" id="subMenu">
+				<div class="sub-menu">
+					<div class="user-info">
+						<img src="../static/images/profilepic.png">
+						<h2>{{username}}</h2>
+					</div>
+					<hr>
 
+					<a href="#" class="sub-menu-link">
+						<img src="../static/images/setting.png">
+						<p>Settings & Privacy</p>
+						<span>&#187;</span>
+					</a>
+					<a href="#" class="sub-menu-link">
+						<img src="../static/images/help.png">
+						<p>Help & Support</p>
+						<span>&#187;</span>
+					</a>
+					<a href="{{url_for('index')}}" class="sub-menu-link">
+						<img src="../static/images/logout.png">
+						<p>Logout</p>
+						<span>&#187;</span>
+					</a>
+				</div>
+				</div>
+				</div>
+				</div>
+			</div>
+		</nav>
 	</div>
+
+	<script>
+		let subMenu = document.getElementById("subMenu");
+		function toggleMenu(){
+			subMenu.classList.toggle("open-menu");
+		}
+	</script>
+
 </body>
 </html>
