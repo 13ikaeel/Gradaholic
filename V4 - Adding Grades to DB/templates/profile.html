@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Gradaholic</title>
-	<link rel="stylesheet" href="../static/add-styles.css">
+	<link rel="stylesheet" href="../static/profile-styles.css">
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
@@ -13,8 +13,8 @@
 		<nav>
 			<img src="../static/images/logo.png" alt="logo" class="logo">
 			<ul>
-				<li><a href=""><svg class="activeicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24": rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path></svg></a></li>
-				<li class="hide"><a href="{{url_for('profile')}}"><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" ><path d="m21.743 12.331-9-10c-.379-.422-1.107-.422-1.486 0l-9 10a.998.998 0 0 0-.17 1.076c.16.361.518.593.913.593h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a.998.998 0 0 0 .743-1.669z"/></svg></a></li>
+				<li><a href="{{url_for('add')}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24": rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path></svg></a></li>
+				<li class="hide"><a href=""><svg class="activeicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" ><path d="m21.743 12.331-9-10c-.379-.422-1.107-.422-1.486 0l-9 10a.998.998 0 0 0-.17 1.076c.16.361.518.593.913.593h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a.998.998 0 0 0 .743-1.669z"/></svg></a></li>
 				<li class="hide"><a href="{{url_for('leaderboard')}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ><path d="M20 7h-4V4c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H4c-1.103 0-2 .897-2 2v9a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9c0-1.103-.897-2-2-2zM4 11h4v8H4v-8zm6-1V4h4v15h-4v-9zm10 9h-4V9h4v10z"/></svg></a></li>
 				<li><a href="{{url_for('notifications')}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z"/></svg></a></li>
 				<!-- <li><a href="#"><img src="../static/images/notifications.png" alt="notifications"></a></li> -->
@@ -26,11 +26,10 @@
 				<div class="sub-menu">
 					<div class="user-info">
 						<img src="../static/images/profilepic.png" >
-						<h3>{{username}}</h3>
+						<h3>{{username}}</h3>						
 					</div>
 
-
-					<a href="{{url_for('profile')}}" class="sub-menu-link-hide-sub-menu" >
+					<a href="" class="sub-menu-link-hide-sub-menu" id="currpage">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  ><path d="m21.743 12.331-9-10c-.379-.422-1.107-.422-1.486 0l-9 10a.998.998 0 0 0-.17 1.076c.16.361.518.593.913.593h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a.998.998 0 0 0 .743-1.669z"/></svg>
 						<p>Home</p>
 						<span>&#187;</span>
@@ -63,59 +62,82 @@
 		</nav>
 
 	</div>
-	<div class="container">
-		<form action="{{url_for('addsuccess')}}" method="POST">
-			<h2>Add Your Grades</h2>
+	<div class="main">
+		<div class="row-container">
+			<div class="row">
+				<div class="col" id="rightmost">
+					<h1>Hello, {{username}}</h1>
+					<p>Joined {{date}}</p>
+				</div>
+				<div class="col">
+					<p>submissons</p>
+					<h1>{{submissions}}</h1>
+				</div>
+			</div>
 			
-			<div class="content">
-			<label  for="examtypes"><p class="examtype-title">Exam Type</p></label>
-			<div class="radio" id="examtypes">
-					<input class="radio__input" type="radio" name="examtype" id="WA1" value="WA1">
-					<label class="radio__label" for="WA1">WA1</label>
-					<input class="radio__input" type="radio" name="examtype" id="WA2" value="WA2">
-					<label class="radio__label" for="WA2">WA2</label>
-					<input class="radio__input" type="radio" name="examtype" id="MYE" value="MYE">
-					<label class="radio__label" for="MYE">MYE</label>
-					<input class="radio__input" type="radio" name="examtype" id="Promo" value="Promo">
-					<label class="radio__label" for="Promo">Promo</label>
-					<input class="radio__input" type="radio" name="examtype" id="Prelim" value="Prelim">
-					<label class="radio__label" for="Prelim">Prelim</label>
-					<input class="radio__input" type="radio" name="examtype" id="Alevels" value="A-Levels">
-					<label class="radio__label" for="Alevels">A-Levels</label>
-				</div>
-				<div class="input-box">
-						<label for="name">Full Name</label>
-						<input type="text" placeholder="Full Name" name="name" required>
-				</div>
-				<div class="input-box">
-						<label for="username">Username</label>
-						<input type="text" placeholder="Username" name="username" required>
-				</div>
-				<div class="input-box">
-						<label for="pw">Password</label>
-						<input type="password" placeholder="Password" name="pw" required>
-				</div>
-				<div class="input-box">
-						<label for="rpw">Retype Password</label>
-						<input type="password" placeholder="Retype Password" name="rpw" required>
-				</div>
+		</div>
 
-				<input type="hidden" name="email" value="{{email}}">
-				<input type="hidden" name="currpage" value="personaldetails">
-
-
-
+		<div class="row-container">
+			<p class="headingp">Your Placings on the Leaderboards</p>
+			<div class="row">
+				<div class="col" id="rightmost">
+					<p>In School</p>
+					<h1>{{school_rank}}</h1>
+				</div>
+				<div class="col">
+					<p>In Singapore</p>
+					<h1>Soon</h1>
+				</div>
 			</div>
-			<div class="alert">
-					<p>By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy. You may recieve SMS notifications from us and can opt out at any time</p>
+			
+		</div>
+
+		<div class="row-container">
+			<p class="headingp">Additional Info</p>
+			<div class="row">
+				<div class="col" id="rightmost">
+					<p>Average Grade</p>
+					<h1>{{avg_grade}}</h1>
+				</div>
+				<div class="col">
+					<p>Average %Grade</p>
+					<h1>{{avg_percentage_grade}}</h1>
+				</div>
+				<div class="col">
+					<p>No. Distinctions</p>
+					<h1>To Be Added</h1>
+				</div>
+				<div class="col">
+					<p>No. Failures</p>
+					<h1>To Be Added</h1>
+				</div>
 			</div>
-			<button type="submit" class="form-button">Add Grade</button>    
-			<div class="flashes">
-					{% for message in get_flashed_messages() %}
-							<p>{{message}}</p>
-					{% endfor %}
+		</div>
+
+		<div class="row-container">
+			<p class="headingp">History</p>
+			<div class="row">
+				<div class="col" id="rightmost">
+					<p>Average Grade</p>
+					<h1>{{avg_grade}}</h1>
+				</div>
+				<div class="col">
+					<p>Average %Grade</p>
+					<h1>{{avg_percentage_grade}}</h1>
+				</div>
+				<div class="col">
+					<p>No. Distinctions</p>
+					<h1>To Be Added</h1>
+				</div>
+				<div class="col">
+					<p>No. Failures</p>
+					<h1>To Be Added</h1>
+				</div>
 			</div>
-		</form>
+		</div>
+
+
+
 		
 	</div>
 

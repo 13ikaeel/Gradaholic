@@ -4,6 +4,7 @@ from hashlib import *
 import random
 import yagmail
 from datetime import *
+from csv import *
 
 
 def calc_sha256_salted(data):
@@ -124,8 +125,18 @@ def profile():
 ###########################################################################
 @app.route('/add',methods=["POST","GET"])
 def add():
+	file = open('h2-subjects.csv')
+	h2_subjects = []
+	for subject in file:
+			h2_subjects.append(subject.strip())
+
+	file = open('h2-subjects.csv')
+	h1_subjects = []
+	for subject in file:
+			h1_subjects.append(subject.strip())
+
 	username = session.get('username')
-	return render_template('add.html',username=username)
+	return render_template('add.html',username=username,h2=h2_subjects,h1=h1_subjects)
 
 @app.route('/add',methods=["POST","GET"])
 def addsuccess():
