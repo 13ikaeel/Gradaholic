@@ -5,6 +5,7 @@ import random
 import yagmail
 from datetime import *
 from csv import *
+from tools import *
 
 
 def calc_sha256_salted(data):
@@ -57,7 +58,45 @@ def signin():
 def profile():
 	if request.method=="GET":
 		username = session.get('username')
-		return render_template('profile.html',username=username)
+		db = connect('db.db')
+		c = db.cursor()
+		c.execute('''
+			SELECT id FROM Users
+			WHERE username=?
+		''',(username,))
+		userid = c.fetchone()[0]
+		c.execute('''
+			SELECT grade FROM UserGrade
+			WHERE usersID=?
+		''',(userid,))
+		grades = c.fetchall()
+		avg_grade = avg_rp(grades)
+
+		c.execute('''
+			SELECT COUNT(grade) FROM UserGrade
+			WHERE grade=? AND usersID=?
+		''',('A',userid))
+		distinctions=c.fetchone()[0]
+
+		c.execute('''
+			SELECT COUNT(grade) FROM UserGrade
+			WHERE grade IN ('S','U') AND usersID=?
+		''',(userid,))
+		failures=c.fetchone()[0]
+
+		c.execute('''
+			SELECT COUNT(usersID) FROM RankPoints
+			WHERE usersID=?
+		''',(userid,))
+		submissions=c.fetchone()[0]
+
+		c.execute('''
+			SELECT registration_date FROM Users
+			WHERE id=?
+		''',(userid,))
+		date=c.fetchone()[0]
+		db.close()
+		return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL')
 	
 	prevpage = request.form.get('currpage')
 	print('prevpage:',prevpage)
@@ -78,7 +117,45 @@ def profile():
 		db.close()
 		print(username)
 		if valid!=None:
-			return render_template("profile.html",username=username)
+			db = connect('db.db')
+			c = db.cursor()
+			c.execute('''
+				SELECT id FROM Users
+				WHERE username=?
+			''',(username,))
+			userid = c.fetchone()[0]
+			c.execute('''
+				SELECT grade FROM UserGrade
+				WHERE usersID=?
+			''',(userid,))
+			grades = c.fetchall()
+			avg_grade = avg_rp(grades)
+
+			c.execute('''
+				SELECT COUNT(grade) FROM UserGrade
+				WHERE grade=? AND usersID=?
+			''',('A',userid))
+			distinctions=c.fetchone()[0]
+
+			c.execute('''
+				SELECT COUNT(grade) FROM UserGrade
+				WHERE grade IN ('S','U') AND usersID=?
+			''',(userid,))
+			failures=c.fetchone()[0]
+
+			c.execute('''
+				SELECT COUNT(usersID) FROM RankPoints
+				WHERE usersID=?
+			''',(userid,))
+			submissions=c.fetchone()[0]
+
+			c.execute('''
+				SELECT registration_date FROM Users
+				WHERE id=?
+			''',(userid,))
+			date=c.fetchone()[0]
+			db.close()
+			return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL')
 		else:
 			flash('Invalid Username/Password')
 			return redirect(url_for('signin'))
@@ -118,7 +195,8 @@ def profile():
 	''', (username,name,hashpw,email,date_time,0))
 	db.commit()
 	db.close()
-	return render_template('profile.html',username=username)
+	date=str(datetime.now())[10]
+	return render_template('profile.html', username=username, school_rank='NIL', avg_grade='NIL', avg_percentage_grade='NIL', distinctions="NIL", failures="NIL", submissions=0, date=date, rank='NIL')
 	
 
 ###########################################################################
@@ -201,10 +279,17 @@ def addsuccess():
 		''',(grades[i],paperid,userid))
 
 
+	h1dict = {'A':10,'B':8.75,'C':7.5,'D':6.25,'E':5,'S':2.5,'U':0}
+	h2dict = {'A':20,'B':17.5,'C':15,'D':12.5,'E':10,'S':5,'U':0}
+	total_rp = h1dict[gp]+h1dict[pw]+h1dict[h2_h1]+h2dict[h2_1]+h2dict[h2_2]+h2dict[h2_3]
+
+	c.execute('''
+		INSERT INTO RankPoints (usersID,examID,rp)
+		VALUES (?,?,?)
+	''',(userid,examid,total_rp))
+
 	db.commit()
 	db.close()
-
-
 	
 	return render_template('add.html',message=message,username=username,h2=session.get('h2_subjects'),h1=session.get('h1_subjects'))
 

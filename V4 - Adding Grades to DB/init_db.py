@@ -44,7 +44,34 @@ c.execute('''
 		usersID INTEGER NOT NULL REFERENCES Users(id)
 	)
 ''')
+#####################################################################
+c.execute('''
+	CREATE TABLE IF NOT EXISTS	RankPoints(
+		id INTEGER PRIMARY KEY NOT NULL,
+		usersID INTEGER NOT NULL REFERENCES Users(id),
+		examID INTEGER NOT NULL REFERENCES EXAM(id),
+		rp INTEGER NOT NULL
+	)
+''')
 
+#########################################################
+c.execute('''
+	CREATE TABLE IF NOT EXISTS JCs(
+		id INTEGER PRIMARY KEY NOT NULL,
+		name TEXT NOT NULL
+	)
+''')
+
+file = open('jcs.csv')
+jcs = []
+for name in file:
+	jcs.append(name.strip())
+
+for name in jcs:
+	c.execute('''
+		INSERT INTO JCs (name)
+		VALUES (?)
+	''',(name,))
 
 db.commit()
 db.close()

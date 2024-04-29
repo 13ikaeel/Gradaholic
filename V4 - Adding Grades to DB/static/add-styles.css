@@ -212,6 +212,10 @@ h2{
 	width:100%;
 	text-align: center;
 }
+.radio__label:hover{
+	background-color: var(--sub-alt-color);
+	transition: 0.2s;
+}
 .radio__label:not(:last-of-type){
 	border-right: 1px solid var(--text-color);
 }
@@ -237,6 +241,9 @@ select{
 	cursor: pointer;
 	outline:none;
 	font-weight: bold;
+}
+select:hover{
+	background-color: var(--sub-alt-color);
 }
 
 select::-webkit-scrollbar {
