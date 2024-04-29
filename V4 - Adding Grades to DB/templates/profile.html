@@ -85,7 +85,7 @@
 					<h1>{{school_rank}}</h1>
 				</div>
 				<div class="col">
-					<p>In Singapore</p>
+					<p>National</p>
 					<h1>Soon</h1>
 				</div>
 			</div>
@@ -116,27 +116,29 @@
 
 		<div class="row-container">
 			<p class="headingp">History</p>
-			<!-- Insert Table -->
+			<table>
+				<tr>
+					<th>RP</th>
+					<th>Exam Type</th>
+					<th>Date</th>
+					<th></th>
+				</tr>
 
-			
-			<!-- <div class="row">
-				<div class="col" id="rightmost">
-					<p>Average Grade</p>
-					<h1>{{avg_grade}}</h1>
-				</div>
-				<div class="col">
-					<p>Average %Grade</p>
-					<h1>{{avg_percentage_grade}}</h1>
-				</div>
-				<div class="col">
-					<p>No. Distinctions</p>
-					<h1>To Be Added</h1>
-				</div>
-				<div class="col">
-					<p>No. Failures</p>
-					<h1>To Be Added</h1>
-				</div>
-			</div> -->
+				{% for ele in history %}
+					<tr>
+						<td>{{ele[0]}}</td>
+						<td>{{ele[1]}}</td>
+						<td>{{ele[2]}}</td>
+						<td class="delete-record">
+							<a href="">
+								<svg id="bin" xmlns="http://www.w3.org/2000/svg" width="20" height="24" ><path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path></svg>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+
+			</table>
+
 		</div>
 
 

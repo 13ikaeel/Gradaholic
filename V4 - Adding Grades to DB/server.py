@@ -95,11 +95,20 @@ def profile():
 			WHERE id=?
 		''',(userid,))
 		date=c.fetchone()[0]
+
+		c.execute('''
+			SELECT rp, type, date FROM RankPoints,Exams
+			WHERE usersID=? And examID=exams.id
+			ORDER BY date DESC
+			LIMIT 20
+		''',(userid,))
+		history = c.fetchall()
 		db.close()
-		return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL')
+		return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL', history=history)
 	
 	prevpage = request.form.get('currpage')
 	print('prevpage:',prevpage)
+
 	if prevpage == 'login':
 		username = request.form.get("username")
 		session['username'] = username
@@ -154,8 +163,16 @@ def profile():
 				WHERE id=?
 			''',(userid,))
 			date=c.fetchone()[0]
+
+			c.execute('''
+				SELECT rp, type, date FROM RankPoints,Exams
+				WHERE usersID=? And examID=exams.id
+				ORDER BY date DESC
+				LIMIT 20
+			''',(userid,))
+			history = c.fetchall()
 			db.close()
-			return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL')
+			return render_template('profile.html', username=username, school_rank='NIL', avg_grade=avg_grade, avg_percentage_grade='NIL', distinctions=distinctions, failures=failures, submissions=submissions, date=date[:10], rank='NIL',history=history)
 		else:
 			flash('Invalid Username/Password')
 			return redirect(url_for('signin'))
@@ -284,9 +301,9 @@ def addsuccess():
 	total_rp = h1dict[gp]+h1dict[pw]+h1dict[h2_h1]+h2dict[h2_1]+h2dict[h2_2]+h2dict[h2_3]
 
 	c.execute('''
-		INSERT INTO RankPoints (usersID,examID,rp)
-		VALUES (?,?,?)
-	''',(userid,examid,total_rp))
+		INSERT INTO RankPoints (usersID,examID,rp,date)
+		VALUES (?,?,?,?)
+	''',(userid,examid,total_rp,str(datetime.now())[:10]))
 
 	db.commit()
 	db.close()

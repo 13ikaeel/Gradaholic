@@ -16,6 +16,8 @@ def rp(grades):
 	return total_rp
 
 def avg_rp(grades):
+	if len(grades)==0:
+		return
 	#if only 1 record in grades
 	if len(grades)==1:
 		return rp(grades)
